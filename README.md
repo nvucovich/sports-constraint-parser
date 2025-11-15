@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sports Scheduling Constraint Parser
 
-## Getting Started
+A semantic search interface that translates natural language scheduling objectives into structured constraint templates for sports league scheduling optimization.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Semantic Search**: Natural language query processing using OpenAI embeddings
+- **Template Matching**: Automatically identifies the correct constraint template
+- **Parameter Extraction**: Extracts structured parameters from user queries
+- **Confidence Scoring**: Provides confidence scores for matches
+- **Alternative Interpretations**: Suggests alternatives for ambiguous queries
+- **User Authentication**: Secure login system with Supabase Auth
+
+## 🛠 Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Authentication**: Supabase Auth
+- **Database**: Supabase (PostgreSQL + pgvector)
+- **Search**: OpenAI Embeddings + Vector Similarity Search
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Deployment**: Vercel
+
+## 📋 Prerequisites
+
+- Node.js 18+ installed
+- Supabase account
+- OpenAI API key
+- Git
+
+## 🔧 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/sports-constraint-parser.git
+   cd sports-constraint-parser
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   
+   Create a `.env.local` file in the root directory:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   OPENAI_API_KEY=your_openai_api_key
+   ```
+
+4. **Set up the database**
+   
+   - Go to your Supabase project
+   - Navigate to SQL Editor
+   - Run the contents of `supabase/schema.sql`
+
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open [http://localhost:3000](http://localhost:3000)**
+
+## 🗄 Database Setup
+
+The database schema includes:
+- `constraint_examples` table with pgvector support
+- Vector similarity search function
+- Proper indexes for performance
+- Row Level Security (RLS) policies
+
+See `supabase/schema.sql` for the complete schema.
+
+## 📚 Constraint Templates
+
+### Template 1: Game Scheduling Constraints
+Ensures specific games are scheduled within certain parameters.
+
+**Example**: "Ensure all rivalry games on a weekend on ESPN"
+
+### Template 2: Sequence Constraints
+Defines patterns across consecutive rounds.
+
+**Example**: "Make sure Penn State plays at UCLA and at USC in back-to-back weeks"
+
+### Template 3: Team Schedule Pattern Constraints
+Controls team-specific scheduling patterns.
+
+**Example**: "No cases of 3 games in 3 nights for any NBA team"
+
+## 🔐 Test Credentials
+
+```
+Email: demo@example.com
+Password: demo123456
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+*(These will be set up after seeding the database)*
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🏗 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+sports-constraint-parser/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/          # Authentication pages
+│   │   ├── (protected)/     # Protected routes
+│   │   └── api/             # API routes
+│   ├── components/
+│   │   ├── auth/            # Auth components
+│   │   └── search/          # Search components
+│   ├── lib/
+│   │   ├── supabase/        # Supabase clients
+│   │   ├── openai.ts        # OpenAI utilities
+│   │   └── config.ts        # Configuration
+│   └── types/
+│       └── index.ts         # TypeScript types
+├── supabase/
+│   └── schema.sql           # Database schema
+└── middleware.ts            # Auth middleware
+```
 
-## Learn More
+## 🚢 Deployment
 
-To learn more about Next.js, take a look at the following resources:
+### Deploy to Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Push your code to GitHub
+2. Import your repository in Vercel
+3. Add environment variables
+4. Deploy
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Environment Variables on Vercel
 
-## Deploy on Vercel
+Make sure to add all variables from `.env.local` to your Vercel project settings.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🤝 Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This is a developer challenge project. Feel free to fork and modify!
+
+## 📝 License
+
+MIT
+
+## 👤 Author
+
+Your Name - [GitHub Profile](https://github.com/YOUR_USERNAME)
+
+## 🔗 Links
+
+- [Live Demo](https://your-demo-url.vercel.app)
+- [GitHub Repository](https://github.com/YOUR_USERNAME/sports-constraint-parser)
+- [Documentation](https://github.com/YOUR_USERNAME/sports-constraint-parser/wiki)
+
+---
+
+Built with ❤️ for the Sports Scheduling Constraint Parser Challenge
