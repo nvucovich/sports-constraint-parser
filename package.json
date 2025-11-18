@@ -9,6 +9,7 @@
     "lint": "next lint",
     "db:setup": "node scripts/setup-database.js",
     "db:seed": "node scripts/seed-data.js",
+    "seed:constraints": "tsx scripts/seed-constraints.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "tailwindcss": "^4",
+    "tsx": "^4.7.0",
     "typescript": "^5"
   }
 }
