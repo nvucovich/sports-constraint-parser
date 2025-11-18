@@ -1,9 +1,9 @@
 // src/components/search/SearchInterface.tsx
 /**
- * Main search interface component with real-time debounced search
+ * Main search interface component with manual search trigger
  *
  * Features:
- * - Debounced search (500ms) to reduce API calls
+ * - Manual search via button click or Enter key
  * - Keyboard shortcuts (Esc, Cmd/Ctrl+K)
  * - Example queries for quick testing
  * - Loading and error states
@@ -33,7 +33,6 @@ export default function SearchInterface() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [searchExecuted, setSearchExecuted] = useState(false)
-  const debounceTimer = useRef<NodeJS.Timeout | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const performSearch = useCallback(async (searchQuery: string) => {
@@ -70,33 +69,6 @@ export default function SearchInterface() {
     }
   }, [])
 
-  // Implement debounced search to avoid excessive API calls
-  // Waits 500ms after user stops typing before executing search
-  useEffect(() => {
-    // Clear any existing timer
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current)
-    }
-
-    // Skip search for empty queries
-    if (!query.trim()) {
-      setResults([])
-      setSearchExecuted(false)
-      return
-    }
-
-    // Schedule search after delay
-    debounceTimer.current = setTimeout(() => {
-      performSearch(query)
-    }, 500)
-
-    // Cleanup
-    return () => {
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current)
-      }
-    }
-  }, [query, performSearch])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -113,7 +85,7 @@ export default function SearchInterface() {
 
   const handleExampleClick = (example: string) => {
     setQuery(example)
-    // The debounced effect will trigger the search
+    performSearch(example)
   }
 
   // Set up keyboard shortcuts for better UX
@@ -145,28 +117,43 @@ export default function SearchInterface() {
     <div className="space-y-4 sm:space-y-6">
       {/* Search Input */}
       <form onSubmit={handleSearch} className="relative">
-        <div className="relative group">
-          <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5 transition-colors group-focus-within:text-blue-500" />
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Describe your scheduling constraint..."
-            className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 text-base sm:text-lg text-gray-900 placeholder:text-gray-400 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
-            disabled={loading}
-            autoFocus
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={handleClearSearch}
-              className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors touch-manipulation"
-              title="Clear search (Esc)"
-            >
-              <X className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-          )}
+        <div className="flex gap-2">
+          <div className="relative group flex-1">
+            <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5 transition-colors group-focus-within:text-blue-500" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Describe your scheduling constraint..."
+              className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 text-base sm:text-lg text-gray-900 placeholder:text-gray-400 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+              disabled={loading}
+              autoFocus
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors touch-manipulation"
+                title="Clear search (Esc)"
+              >
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            )}
+          </div>
+          <button
+            type="submit"
+            disabled={loading || !query.trim()}
+            className="px-4 sm:px-6 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors flex items-center gap-2 touch-manipulation active:scale-95"
+            title="Search (Enter)"
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+            ) : (
+              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+            )}
+            <span className="hidden sm:inline">Search</span>
+          </button>
         </div>
 
         {/* Search status */}
@@ -179,8 +166,8 @@ export default function SearchInterface() {
               </span>
             ) : (
               <>
-                <span className="hidden sm:inline">Real-time search enabled - results appear as you type</span>
-                <span className="sm:hidden">Type to search</span>
+                <span className="hidden sm:inline">Press Enter or click Search to find matching constraints</span>
+                <span className="sm:hidden">Click Search or press Enter</span>
               </>
             )}
           </span>
